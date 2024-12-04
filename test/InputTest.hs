@@ -35,8 +35,8 @@ inputTest solution expected = let name = solutionName solution in
 tests = TestLabel "InputTest" $ test
     [ inputTest Day01.solution (2970687, 23963899)
     , inputTest Day02.solution (379, 430)
-    , inputTest Day03.solution (NoSolution, NoSolution)
-    , inputTest Day04.solution (NoSolution, NoSolution)
+    , inputTest Day03.solution (175615763, 74361272)
+    , inputTest Day04.solution (2545, NoSolution)
     , inputTest Day05.solution (NoSolution, NoSolution)
     , inputTest Day06.solution (NoSolution, NoSolution)
     , inputTest Day07.solution (NoSolution, NoSolution)

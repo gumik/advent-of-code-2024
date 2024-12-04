@@ -12,10 +12,12 @@ module Common (
     inArrayBounds,
     ShowString(..),
     toTuple,
-    toTriple) where
+    toTriple,
+    search) where
 import Numeric (readInt)
 import Data.List.Split (splitOn, chunksOf)
 import Data.Array
+import Data.List (tails)
 
 data Solution a b = Solution {
     solutionName :: String,
@@ -74,3 +76,7 @@ toTuple _ = error "toTuple got list with length /= than 2"
 toTriple :: [a] -> (a, a, a)
 toTriple [x, y, z] = (x, y, z)
 toTriple _ = error "toTuple got list with length /= than 3"
+
+search :: Eq a => [a] -> [a] -> [Int]
+search text toFind = map (fst . head) $ filter isPrefix (tails ([0..] `zip` text)) where
+    isPrefix t = toFind == take (length toFind) (map snd t)

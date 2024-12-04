@@ -67,10 +67,39 @@ day02part2 = [("7 6 4 2 1\n"
             ++ "8 6 4 4 1\n"
             ++ "1 3 6 7 9\n", 4)]
 
-day03part1 = []
-day03part2 = []
+day03part1 = [("xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))", 161)]
+day03part2 = [("xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))", 48)]
 
-day04part1 = []
+day04part1 = [("MMMSXXMASM\n"
+            ++ "MSAMXMSMSA\n"
+            ++ "AMXSXMAAMM\n"
+            ++ "MSAMASMSMX\n"
+            ++ "XMASAMXAMM\n"
+            ++ "XXAMMXXAMA\n"
+            ++ "SMSMSASXSS\n"
+            ++ "SAXAMASAAA\n"
+            ++ "MAMMMXMMMM\n"
+            ++ "MXMXAXMASX\n", 18),
+            ("XMAS", 1),
+            ("X\nM\nA\nS\n", 1),
+            ("SAMX", 1),
+            ("S\nA\nM\nX", 1),
+            ("X...\n"
+          ++ ".M..\n"
+          ++ "..A.\n"
+          ++ "...S\n", 1),
+            ("S...\n"
+          ++ ".A..\n"
+          ++ "..M.\n"
+          ++ "...X\n", 1),
+            ("...X\n"
+          ++ "..M.\n"
+          ++ ".A..\n"
+          ++ "S...\n", 1),
+            ("...S\n"
+          ++ "..A.\n"
+          ++ ".M..\n"
+          ++ "X...\n", 1)]
 day04part2 = []
 
 day05part1 = []
