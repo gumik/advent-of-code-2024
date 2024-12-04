@@ -10,6 +10,14 @@ run input = let board = parse input in (part1 board, NoSolution)
 
 type Point = (Int, Int)
 type Direction = (Int, Int)
+(←) = (0, -1)
+(↑) = (-1, 0)
+(→) = (0, 1)
+(↓) = (1, 0)
+(↖) = (-1, -1)
+(↗) = (-1, 1)
+(↘) = (1, 1)
+(↙) = (1, -1)
 type Board = Array Point Char
 
 parse :: String -> Board
@@ -20,26 +28,26 @@ part1 board = length $ concatMap (`search` "XMAS") lines where
     ((y0, x0), (ym, xm)) = bounds board
     y1 = y0+1
 
-    lines = getLines board [(y, x0) | y <- [y0..ym]] (0, 1)   -- horizontals
-         ++ getLines board [(y, xm) | y <- [y0..ym]] (0, -1)  -- horizontals backwards
-         ++ getLines board [(y0, x) | x <- [x0..xm]] (1, 0)   -- verticals
-         ++ getLines board [(ym, x) | x <- [x0..xm]] (-1, 0)  -- verticals backwards
+    lines = getLines board [(y, x0) | y <- [y0..ym]] (→)  -- horizontals
+         ++ getLines board [(y, xm) | y <- [y0..ym]] (←)  -- horizontals backwards
+         ++ getLines board [(y0, x) | x <- [x0..xm]] (↓)  -- verticals
+         ++ getLines board [(ym, x) | x <- [x0..xm]] (↑)  -- verticals backwards
 
         -- diagonals to bottom right
-         ++ getLines board [(y0, x) | x <- [x0..xm]] (1, 1)   -- from top
-         ++ getLines board [(y, x0) | y <- [y1..ym]] (1, 1)   -- from left
+         ++ getLines board [(y0, x) | x <- [x0..xm]] (↘)   -- from top
+         ++ getLines board [(y, x0) | y <- [y1..ym]] (↘)   -- from left
 
         -- diagonals to bottom left
-         ++ getLines board [(y0, x) | x <- [x0..xm]] (1, -1)  -- from top
-         ++ getLines board [(y, xm) | y <- [y1..ym]] (1, -1)  -- from right
+         ++ getLines board [(y0, x) | x <- [x0..xm]] (↙)   -- from top
+         ++ getLines board [(y, xm) | y <- [y1..ym]] (↙)   -- from right
 
         -- diagonals to top right
-         ++ getLines board [(ym, x) | x <- [x0..xm]] (-1, 1)    -- from bottom
-         ++ getLines board [(y, x0) | y <- [y0..ym-1]] (-1, 1)  -- from left
+         ++ getLines board [(ym, x) | x <- [x0..xm]]   (↗) -- from bottom
+         ++ getLines board [(y, x0) | y <- [y0..ym-1]] (↗) -- from left
 
         -- diagonals to top left
-         ++ getLines board [(ym, x) | x <- [x0..xm]] (-1, -1)   -- from bottom
-         ++ getLines board [(y, xm) | y <- [y0..ym-1]] (-1, -1) -- from right
+         ++ getLines board [(ym, x) | x <- [x0..xm]]   (↖) -- from bottom
+         ++ getLines board [(y, xm) | y <- [y0..ym-1]] (↖) -- from right
 
 -- Generates list of strings. Each string is a line in the board and starts
 -- in a particular point from the startingPoints list. Direction of the
