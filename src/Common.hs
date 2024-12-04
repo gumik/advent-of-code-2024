@@ -13,7 +13,8 @@ module Common (
     ShowString(..),
     toTuple,
     toTriple,
-    search) where
+    search,
+    searchIdx) where
 import Numeric (readInt)
 import Data.List.Split (splitOn, chunksOf)
 import Data.Array
@@ -77,6 +78,11 @@ toTriple :: [a] -> (a, a, a)
 toTriple [x, y, z] = (x, y, z)
 toTriple _ = error "toTuple got list with length /= than 3"
 
-search :: Eq a => [a] -> [a] -> [Int]
-search text toFind = map (fst . head) $ filter isPrefix (tails ([0..] `zip` text)) where
-    isPrefix t = toFind == take (length toFind) (map snd t)
+searchIdx :: Eq a => [a] -> [a] -> [Int]
+searchIdx text toFind = map (fst . head) $ search (\(i, c) x -> x == c) ([0..] `zip` text) toFind
+
+search :: Eq a => (a -> b -> Bool) -> [a] -> [b] -> [[a]]
+search eq text toFind = filter isPrefix slices where
+    toFindLen = length toFind
+    slices = filter ((== toFindLen) . length) (map (take toFindLen) (tails text))
+    isPrefix t = and $ zipWith eq (take toFindLen t) toFind

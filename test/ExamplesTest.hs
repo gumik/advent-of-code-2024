@@ -100,7 +100,16 @@ day04part1 = [("MMMSXXMASM\n"
           ++ "..A.\n"
           ++ ".M..\n"
           ++ "X...\n", 1)]
-day04part2 = []
+day04part2 = [("MMMSXXMASM\n"
+            ++ "MSAMXMSMSA\n"
+            ++ "AMXSXMAAMM\n"
+            ++ "MSAMASMSMX\n"
+            ++ "XMASAMXAMM\n"
+            ++ "XXAMMXXAMA\n"
+            ++ "SMSMSASXSS\n"
+            ++ "SAXAMASAAA\n"
+            ++ "MAMMMXMMMM\n"
+            ++ "MXMXAXMASX\n", 9)]
 
 day05part1 = []
 day05part2 = []
