@@ -41,45 +41,38 @@ exampleTest solution (part1Cases, part2Cases) = let
         test $ map (makeTest "part2" snd) part2Cases ]
 
 
-day01part1 = [("3   4\n"
-            ++ "4   3\n"
-            ++ "2   5\n"
-            ++ "1   3\n"
-            ++ "3   9\n"
-            ++ "3   3\n", 11)]
-day01part2 = [("3   4\n"
-            ++ "4   3\n"
-            ++ "2   5\n"
-            ++ "1   3\n"
-            ++ "3   9\n"
-            ++ "3   3\n", 31)]
+day01exampleInput = "3   4\n"
+                 ++ "4   3\n"
+                 ++ "2   5\n"
+                 ++ "1   3\n"
+                 ++ "3   9\n"
+                 ++ "3   3\n"
+day01part1 = [(day01exampleInput, 11)]
+day01part2 = [(day01exampleInput, 31)]
 
-day02part1 = [("7 6 4 2 1\n"
-            ++ "1 2 7 8 9\n"
-            ++ "9 7 6 2 1\n"
-            ++ "1 3 2 4 5\n"
-            ++ "8 6 4 4 1\n"
-            ++ "1 3 6 7 9\n", 2)]
-day02part2 = [("7 6 4 2 1\n"
-            ++ "1 2 7 8 9\n"
-            ++ "9 7 6 2 1\n"
-            ++ "1 3 2 4 5\n"
-            ++ "8 6 4 4 1\n"
-            ++ "1 3 6 7 9\n", 4)]
+day02exampleInput = "7 6 4 2 1\n"
+                 ++ "1 2 7 8 9\n"
+                 ++ "9 7 6 2 1\n"
+                 ++ "1 3 2 4 5\n"
+                 ++ "8 6 4 4 1\n"
+                 ++ "1 3 6 7 9\n"
+day02part1 = [(day02exampleInput, 2)]
+day02part2 = [(day02exampleInput, 4)]
 
 day03part1 = [("xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))", 161)]
 day03part2 = [("xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))", 48)]
 
-day04part1 = [("MMMSXXMASM\n"
-            ++ "MSAMXMSMSA\n"
-            ++ "AMXSXMAAMM\n"
-            ++ "MSAMASMSMX\n"
-            ++ "XMASAMXAMM\n"
-            ++ "XXAMMXXAMA\n"
-            ++ "SMSMSASXSS\n"
-            ++ "SAXAMASAAA\n"
-            ++ "MAMMMXMMMM\n"
-            ++ "MXMXAXMASX\n", 18),
+day04exampleInput = "MMMSXXMASM\n"
+                 ++ "MSAMXMSMSA\n"
+                 ++ "AMXSXMAAMM\n"
+                 ++ "MSAMASMSMX\n"
+                 ++ "XMASAMXAMM\n"
+                 ++ "XXAMMXXAMA\n"
+                 ++ "SMSMSASXSS\n"
+                 ++ "SAXAMASAAA\n"
+                 ++ "MAMMMXMMMM\n"
+                 ++ "MXMXAXMASX\n"
+day04part1 = [(day04exampleInput, 18),
             ("XMAS", 1),
             ("X\nM\nA\nS\n", 1),
             ("SAMX", 1),
@@ -100,19 +93,38 @@ day04part1 = [("MMMSXXMASM\n"
           ++ "..A.\n"
           ++ ".M..\n"
           ++ "X...\n", 1)]
-day04part2 = [("MMMSXXMASM\n"
-            ++ "MSAMXMSMSA\n"
-            ++ "AMXSXMAAMM\n"
-            ++ "MSAMASMSMX\n"
-            ++ "XMASAMXAMM\n"
-            ++ "XXAMMXXAMA\n"
-            ++ "SMSMSASXSS\n"
-            ++ "SAXAMASAAA\n"
-            ++ "MAMMMXMMMM\n"
-            ++ "MXMXAXMASX\n", 9)]
+day04part2 = [(day04exampleInput, 9)]
 
-day05part1 = []
-day05part2 = []
+day05exampleInput = "47|53\n"
+                 ++ "97|13\n"
+                 ++ "97|61\n"
+                 ++ "97|47\n"
+                 ++ "75|29\n"
+                 ++ "61|13\n"
+                 ++ "75|53\n"
+                 ++ "29|13\n"
+                 ++ "97|29\n"
+                 ++ "53|29\n"
+                 ++ "61|53\n"
+                 ++ "97|53\n"
+                 ++ "61|29\n"
+                 ++ "47|13\n"
+                 ++ "75|47\n"
+                 ++ "97|75\n"
+                 ++ "47|61\n"
+                 ++ "75|61\n"
+                 ++ "47|29\n"
+                 ++ "75|13\n"
+                 ++ "53|13\n"
+                 ++ "\n"
+                 ++ "75,47,61,53,29\n"
+                 ++ "97,61,53,29,13\n"
+                 ++ "75,29,13\n"
+                 ++ "75,97,47,61,53\n"
+                 ++ "61,13,29\n"
+                 ++ "97,13,75,29,47\n"
+day05part1 = [(day05exampleInput, 143)]
+day05part2 = [(day05exampleInput, 123)]
 
 day06part1 = []
 day06part2 = []
