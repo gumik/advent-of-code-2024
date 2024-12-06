@@ -126,8 +126,21 @@ day05exampleInput = "47|53\n"
 day05part1 = [(day05exampleInput, 143)]
 day05part2 = [(day05exampleInput, 123)]
 
-day06part1 = []
-day06part2 = []
+day06exampleInput = "....#.....\n"
+                 ++ ".........#\n"
+                 ++ "..........\n"
+                 ++ "..#.......\n"
+                 ++ ".......#..\n"
+                 ++ "..........\n"
+                 ++ ".#..^.....\n"
+                 ++ "........#.\n"
+                 ++ "#.........\n"
+                 ++ "......#...\n"
+day06part1 = [(day06exampleInput, 41)]
+day06part2 = [(day06exampleInput, 6),
+              (".#.\n"
+            ++ "...\n"
+            ++ ".^.\n", 0)]
 
 day07part1 = []
 day07part2 = []
