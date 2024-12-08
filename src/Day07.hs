@@ -1,8 +1,9 @@
-module Day07 ( solution, calculate, isValid, genPossibilities ) where
+module Day07 ( solution, isValid, Operator(..) ) where
 
 import Common (Solution(Solution), NoSolution(..), readNum)
 import Data.List.Split (splitOn)
 import Debug.Trace (traceShow)
+import Data.Maybe (mapMaybe)
 
 solution = Solution "day07" run
 
@@ -20,30 +21,44 @@ parseLine input = (testValue, numbers) where
     numbers = map readNum $ splitOn " " rest
 
 part1 :: [Equation] -> Int
-part1 = sum . map fst . filter (isValid [(*), (+)])
+part1 = sum . map fst . filter (isValid [Plus, Multiply])
 
 part2 :: [Equation] -> Int
-part2 = sum . map fst . filter (isValid [(*), (+), (|-|)])
+part2 = sum . map fst . filter (isValid [Plus, Multiply, Concat])
 
--- TODO: optimize to not calculate further when number is bigger
--- Or maybe totaly different approach?
--- Try one operator the recursively find in subsequence if can produce testValue-value?
--- Wouldn't that be the same??
-isValid :: [Int -> Int -> Int] -> Equation -> Bool
-isValid ops (testValue, numbers) = {- traceShow (testValue, numbers, result) -} result where
-    result = any ((== testValue) . calculate numbers) possibilities
-    possibilities = genPossibilities ops (length numbers - 1)
+data Operator = Plus | Multiply | Concat
 
--- TODO: maybe use List monad?
-genPossibilities :: [a] -> Int -> [[a]]
-genPossibilities ops 0 = [[]]
-genPossibilities ops n = concatMap (\op -> map (op :) (genPossibilities ops (n - 1))) ops
+-- Go number by number from the back of the list.
+-- Try all the possible operations, but reverse it and check recursively for changed testValue and rest of the list.
+-- Example:
+-- (9, [1, 2, 3])
+-- 1. (+) -> (6, [1, 2])
+--   1.1 (+) -> (4, [1])
+--     1.1.1 (+) -> (3, []) -> False
+--     1.1.2 (*) -> (4, []) -> False
+--   1.2 (*) -> (3, [1])
+--     1.2.1 (+) -> (2, []) -> False
+--     1.2.2 (*) -> (3, []) -> False
+-- 2. (*) -> (3, [1, 2])
+--   2.1 (+) -> (1, [1])
+--     2.1.1 (+) -> (0, []) -> True
+--   2.2 (*) -> not possible (3/2 not divisible)
+-- There was one branch which resulted in empty list and testValue=0 so the answer is True.
+isValid :: [Operator] -> Equation -> Bool
+isValid ops (testValue, numbers) = isValid' ops (testValue, reverse numbers)
 
-calculate :: [Int] -> [Int -> Int -> Int] -> Int
--- calculate (n:ns) ops = foldl (\(acc, (b, op)) -> acc `op` b) n (ns `zip` ops)
-calculate nums ops = calculate' nums ops where
-    calculate' [a, b] [op] = a `op` b
-    calculate' (a:b:as) (op:ops) = calculate (a `op` b : as) ops
+isValid' :: [Operator] -> (Int, [Int]) -> Bool
+isValid' _ (0, []) = True
+isValid' _ (_, []) = False
+isValid' ops (testValue, numbers) = any (isValid' ops) (mapMaybe (\op -> opInverse op testValue numbers) ops)
 
-(|-|) :: Int -> Int -> Int
-a |-| b = readNum $ show a ++ show b
+
+-- Concatenation of eg. 3 is in fact equal to (* 10 + 3).
+-- The inverse of it is (- 3 / 10).
+opInverse :: Operator -> Int -> [Int] -> Maybe (Int, [Int])
+opInverse Plus testValue (x:xs) = let testValue' = testValue - x in if testValue' < 0 then Nothing else Just (testValue', xs)
+opInverse Multiply testValue (x:xs) = let (testValue', rest) = testValue `divMod` x in if rest /= 0 then Nothing else Just (testValue', xs)
+opInverse Concat testValue l@(x:xs) = do
+    (afterSub, _) <- opInverse Plus testValue l
+    (afterDiv, _ ) <- opInverse Multiply afterSub [10 ^ length (show x)]
+    return (afterDiv, xs)
