@@ -45,20 +45,20 @@ data Operator = Plus | Multiply | Concat
 --   2.2 (*) -> not possible (3/2 not divisible)
 -- There was one branch which resulted in empty list and testValue=0 so the answer is True.
 isValid :: [Operator] -> Equation -> Bool
-isValid ops (testValue, numbers) = isValid' ops (testValue, reverse numbers)
+isValid ops (testValue, numbers) = isValid' ops (reverse numbers) testValue
 
-isValid' :: [Operator] -> (Int, [Int]) -> Bool
-isValid' _ (0, []) = True
-isValid' _ (_, []) = False
-isValid' ops (testValue, numbers) = any (isValid' ops) (mapMaybe (\op -> opInverse op testValue numbers) ops)
+isValid' :: [Operator] -> [Int] -> Int -> Bool
+isValid' _ [] 0 = True
+isValid' _ [] _ = False
+isValid' ops (x:xs) testValue = any (isValid' ops xs) (mapMaybe (opInverse testValue x) ops)
 
 
 -- Concatenation of eg. 3 is in fact equal to (* 10 + 3).
 -- The inverse of it is (- 3 / 10).
-opInverse :: Operator -> Int -> [Int] -> Maybe (Int, [Int])
-opInverse Plus testValue (x:xs) = let testValue' = testValue - x in if testValue' < 0 then Nothing else Just (testValue', xs)
-opInverse Multiply testValue (x:xs) = let (testValue', rest) = testValue `divMod` x in if rest /= 0 then Nothing else Just (testValue', xs)
-opInverse Concat testValue l@(x:xs) = do
-    (afterSub, _) <- opInverse Plus testValue l
-    (afterDiv, _ ) <- opInverse Multiply afterSub [10 ^ length (show x)]
-    return (afterDiv, xs)
+opInverse :: Int -> Int -> Operator -> Maybe Int
+opInverse testValue x Plus = let testValue' = testValue - x in if testValue' < 0 then Nothing else Just testValue'
+opInverse testValue x Multiply = let (testValue', rest) = testValue `divMod` x in if rest /= 0 then Nothing else Just testValue'
+opInverse testValue x Concat = do
+    afterSub <- opInverse testValue x Plus
+    opInverse afterSub (10 ^ length (show x)) Multiply
+
