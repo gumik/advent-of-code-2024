@@ -154,8 +154,20 @@ day07exampleInput = "190: 10 19\n"
 day07part1 = [(day07exampleInput, 3749)]
 day07part2 = [(day07exampleInput, 11387)]
 
-day08part1 = []
-day08part2 = []
+day08exampleInput = "............\n"
+                 ++ "........0...\n"
+                 ++ ".....0......\n"
+                 ++ ".......0....\n"
+                 ++ "....0.......\n"
+                 ++ "......A.....\n"
+                 ++ "............\n"
+                 ++ "............\n"
+                 ++ "........A...\n"
+                 ++ ".........A..\n"
+                 ++ "............\n"
+                 ++ "............\n"
+day08part1 = [(day08exampleInput, 14)]
+day08part2 = [(day08exampleInput, 34)]
 
 day09part1 = []
 day09part2 = []
