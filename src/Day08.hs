@@ -52,8 +52,8 @@ antinodesForAntennasPair2 (ym, xm) ((y1, x1), (y2, x2)) = antinodes1 ++ antinode
     antinodes2 = takeWhile  (inBounds (ym, xm)) $ iterate (\(y, x) -> (y - dy, x - dx)) (y2, x2)
 
 combinations :: Int -> [a] -> [[a]]
+combinations 0 _ = [[]]
 combinations _ [] = []
-combinations 1 xs = map (:[]) xs
 combinations n (x:xs) = map (x:) (combinations (n-1) xs) ++ combinations n xs
 
 inBounds :: (Int, Int) -> (Int, Int) -> Bool
