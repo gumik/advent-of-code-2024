@@ -169,7 +169,7 @@ day08exampleInput = "............\n"
 day08part1 = [(day08exampleInput, 14)]
 day08part2 = [(day08exampleInput, 34)]
 
-day09part1 = []
+day09part1 = [("2333133121414131402", 1928)]
 day09part2 = []
 
 day10part1 = []
