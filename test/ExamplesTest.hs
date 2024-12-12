@@ -178,8 +178,55 @@ day10part2 = []
 day11part1 = []
 day11part2 = []
 
-day12part1 = []
-day12part2 = []
+day12part1 = [("AAAA\n"
+            ++ "BBCD\n"
+            ++ "BBCC\n"
+            ++ "EEEC\n", 140),
+
+              ("OOOOO\n"
+            ++ "OXOXO\n"
+            ++ "OOOOO\n"
+            ++ "OXOXO\n"
+            ++ "OOOOO\n", 772),
+
+              ("RRRRIICCFF\n"
+            ++ "RRRRIICCCF\n"
+            ++ "VVRRRCCFFF\n"
+            ++ "VVRCCCJFFF\n"
+            ++ "VVVVCJJCFE\n"
+            ++ "VVIVCCJJEE\n"
+            ++ "VVIIICJJEE\n"
+            ++ "MIIIIIJJEE\n"
+            ++ "MIIISIJEEE\n"
+            ++ "MMMISSJEEE\n", 1930)]
+day12part2 = [("AAAA\n"
+            ++ "BBCD\n"
+            ++ "BBCC\n"
+            ++ "EEEC\n", 80),
+
+              ("EEEEE\n"
+            ++ "EXXXX\n"
+            ++ "EEEEE\n"
+            ++ "EXXXX\n"
+            ++ "EEEEE\n", 236),
+
+              ("AAAAAA\n"
+            ++ "AAABBA\n"
+            ++ "AAABBA\n"
+            ++ "ABBAAA\n"
+            ++ "ABBAAA\n"
+            ++ "AAAAAA\n", 368),
+
+              ("RRRRIICCFF\n"
+            ++ "RRRRIICCCF\n"
+            ++ "VVRRRCCFFF\n"
+            ++ "VVRCCCJFFF\n"
+            ++ "VVVVCJJCFE\n"
+            ++ "VVIVCCJJEE\n"
+            ++ "VVIIICJJEE\n"
+            ++ "MIIIIIJJEE\n"
+            ++ "MIIISIJEEE\n"
+            ++ "MMMISSJEEE\n", 1206)]
 
 day13part1 = []
 day13part2 = []

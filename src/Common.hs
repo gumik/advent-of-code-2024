@@ -9,6 +9,7 @@ module Common (
     toDecimal,
     parseArray,
     showArray,
+    showCharArray,
     inArrayBounds,
     ShowString(..),
     toTuple,
@@ -65,6 +66,12 @@ showArray arr = let
     ((_, w1), (_, w2)) = bounds arr
     width = w2 - w1 + 1
     in unlines $ chunksOf width $ concatMap show $ elems arr
+
+showCharArray :: Array (Int, Int) Char -> String
+showCharArray arr = let
+    ((_, w1), (_, w2)) = bounds arr
+    width = w2 - w1 + 1
+    in unlines $ chunksOf width $ elems arr
 
 inArrayBounds arr (y, x) = let
     ((h0, w0), (hm, wm)) = bounds arr
