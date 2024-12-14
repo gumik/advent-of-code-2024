@@ -228,10 +228,38 @@ day12part2 = [("AAAA\n"
             ++ "MIIISIJEEE\n"
             ++ "MMMISSJEEE\n", 1206)]
 
-day13part1 = []
-day13part2 = []
+day13exampleInput = "Button A: X+94, Y+34\n"
+                 ++ "Button B: X+22, Y+67\n"
+                 ++ "Prize: X=8400, Y=5400\n"
+                 ++ "\n"
+                 ++ "Button A: X+26, Y+66\n"
+                 ++ "Button B: X+67, Y+21\n"
+                 ++ "Prize: X=12748, Y=12176\n"
+                 ++ "\n"
+                 ++ "Button A: X+17, Y+86\n"
+                 ++ "Button B: X+84, Y+37\n"
+                 ++ "Prize: X=7870, Y=6450\n"
+                 ++ "\n"
+                 ++ "Button A: X+69, Y+23\n"
+                 ++ "Button B: X+27, Y+71\n"
+                 ++ "Prize: X=18641, Y=10279\n"
+day13part1 = [(day13exampleInput, 480)]
+day13part2 = [(day13exampleInput, 875318608908)]
 
-day14part1 = []
+day14exampleInput = "11,7\n"
+                 ++ "p=0,4 v=3,-3\n"
+                 ++ "p=6,3 v=-1,-3\n"
+                 ++ "p=10,3 v=-1,2\n"
+                 ++ "p=2,0 v=2,-1\n"
+                 ++ "p=0,0 v=1,3\n"
+                 ++ "p=3,0 v=-2,-2\n"
+                 ++ "p=7,6 v=-1,-3\n"
+                 ++ "p=3,0 v=-1,-2\n"
+                 ++ "p=9,3 v=2,3\n"
+                 ++ "p=7,3 v=-1,2\n"
+                 ++ "p=2,4 v=2,-3\n"
+                 ++ "p=9,5 v=-3,-3\n"
+day14part1 = [(day14exampleInput, 12)]
 
 day14part2 = []
 

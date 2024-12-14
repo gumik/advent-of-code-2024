@@ -14,7 +14,7 @@ import Day10 ( solution )
 import Day11 ( solution )
 import Day12 ( solution )
 import Day13 ( solution )
-import Day14 ( solution )
+import Day14 ( solution, part2 )
 import Day15 ( solution )
 import Day16 ( solution )
 import Day17 ( solution )
@@ -38,7 +38,9 @@ main = do
     let daySelection = args !? 0
         otherInput = args !? 1
         solutionsToRun = filter (maybe (const True) (==) daySelection . solutionName) solutions
-    mapM_ (runSolution otherInput) solutionsToRun
+    if daySelection == Just "day14part2"
+        then runDay14part2
+        else mapM_ (runSolution otherInput) solutionsToRun
 
 runSolution :: Maybe String -> Solution String String -> IO ()
 runSolution otherInput solution = do
@@ -86,3 +88,10 @@ stringSolution (Solution name run) = Solution name (bimap show show . run)
 
 showSolution :: String -> String
 showSolution = intercalate "\n" . map ("    " ++) . splitOn "\n"
+
+runDay14part2 :: IO ()
+runDay14part2 = do
+    let inputFile = "data/day14-input.txt"
+
+    input <- readFile inputFile
+    part2 input
