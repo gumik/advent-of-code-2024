@@ -1,5 +1,5 @@
 {-# LANGUAGE TupleSections #-}
-module Day15 ( solution ) where
+module Day15 ( solution, tryMove, Item(..), Move(..)) where
 
 import Common (Solution(Solution), NoSolution(..), readNum, parseArray, showCharArray)
 import Data.List.Split (splitOn)
@@ -16,7 +16,7 @@ solution = Solution "day15" run
 run input = let parsed = parse input in (part1 parsed, NoSolution)
 
 type Point = (Int, Int)
-data Item = Box | Wall | Empty
+data Item = Box | WideBox Int | Wall deriving Show -- | Empty  -- WideBox value is its left X coordinate
 data Move = Left | Up | Right | Down
 
 isBox :: Item -> Bool
@@ -45,7 +45,7 @@ parseMove c = case c of
     'v' -> Down
 
 part1 :: (Point, [(Point, Item)], [Move]) -> Int
-part1 (robotPos, items, moves) = sum $ map (gpsCoord . fst) $ filter (isBox . snd) (M.toList items') where
+part1 (robotPos, items, moves) = {- trace (concatMap (\(rp, its) -> "\n" ++ showBoard rp its) xx) $ -} sum $ map (gpsCoord . fst) $ filter (isBox . snd) (M.toList items') where
     xx = scanl makeMove (robotPos, M.fromList items) moves
     items' = snd $ last xx
 
@@ -53,25 +53,31 @@ gpsCoord :: Point -> Int
 gpsCoord (x, y) = 100*y + x
 
 makeMove :: (Point, M.Map Point Item) -> Move -> (Point, M.Map Point Item)
-makeMove (robotPos, items) move = case snd lastPos of
-        Wall  -> (robotPos, items)
-        Empty -> (robotPos', items')
-    where
-        lineItems = itemsInLine items move robotPos
-        boxesToMove = init lineItems
-        lastPos = last lineItems
-        robotPos' = fst $ head lineItems
-        items' = if null boxesToMove
-                    then items
-                    else M.insert (fst lastPos) Box (M.delete robotPos' items)
+makeMove (robotPos, items) move = case tryMove items robotPos move of
+        Nothing -> (robotPos, items)
+        Just boxMoves -> (robotPos', items') where
+            robotPos' = nextPos move robotPos
+            itemsRemovedFrom = foldl (\its (from, _) -> M.delete from its) items boxMoves
+            itemsAddedTo = foldl (\its (_, to) -> M.insert to Box its) itemsRemovedFrom boxMoves
+            items' = itemsAddedTo
 
-itemsInLine :: M.Map Point Item -> Move -> Point -> [(Point, Item)]
-itemsInLine items move pos = let item = M.lookup pos' items
-                                 pos' = nextPos move pos
-                             in case item of
-                                Just Wall -> [(pos', Wall)]
-                                Just Box -> (pos', Box) : itemsInLine items move pos'
-                                Nothing -> [(pos', Empty)]
+{-
+Checks if it is possible to move robot from given point to given direction.
+Detects collisions with boxes and walls. If the move is not possible then result is Nothing.
+If it is possible it is Just with a list of all the boxes movements that are pushed by the robot.
+Item in the list is (from, to).
+-}
+tryMove :: M.Map Point Item -> Point -> Move -> Maybe [(Point, Point)]
+tryMove items pos move = let
+        currentItem = M.lookup pos items
+        pos' = nextPos move pos
+        currentItemMove = maybe [] (const [(pos, pos')]) (M.lookup pos items) in
+    case M.lookup pos' items of
+        Nothing -> Just currentItemMove
+        Just Wall -> Nothing
+        Just Box -> do
+            otherBoxesToMove <- tryMove items pos' move
+            return $ currentItemMove ++ otherBoxesToMove
 
 nextPos :: Move -> Point -> Point
 nextPos move (x, y) = case move of
