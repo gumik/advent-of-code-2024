@@ -296,7 +296,8 @@ day15example2Input = "########\n"
                   ++ "<^^>>>vv<v>>v<<\n"
 day15part1 = [(day15example1Input, 10092),
               (day15example2Input, 2028)]
-day15part2 = []
+day15part2 = [(day15example1Input, 9021),
+              (day15example2Input, 1751)]
 
 day16part1 = []
 day16part2 = []
