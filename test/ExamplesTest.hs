@@ -317,8 +317,18 @@ day16exampleInput = "###############\n"
 day16part1 = [{- (day16exampleInput, 7036) -}]
 day16part2 = []
 
-day17part1 = []
-day17part2 = []
+day17exampleInput = "Register A: 729\n"
+                 ++ "Register B: 0\n"
+                 ++ "Register C: 0\n"
+                 ++ "\n"
+                 ++ "Program: 0,1,5,4,3,0\n"
+day17exampleInput2 = "Register A: 2024\n"
+                  ++ "Register B: 0\n"
+                  ++ "Register C: 0\n"
+                  ++ "\n"
+                  ++ "Program: 0,3,5,4,3,0\n"
+day17part1 = [(day17exampleInput, "4,6,3,5,6,3,5,2,1,0")]
+day17part2 = [{- (day17exampleInput2, 117440) -}]
 
 day18part1 = []
 day18part2 = []
