@@ -1,15 +1,33 @@
-module Day09 ( solution, defrag, cutToSize, Block(..) ) where
+{-# LANGUAGE TupleSections #-}
+module Day09 ( solution, defrag, cutToSize, Block(..), blockIndex ) where
 
 import Common (Solution(Solution), NoSolution(..), readNum)
+import qualified Data.Set as S
+import qualified Data.Map.Strict as M
+import Data.Maybe (mapMaybe)
+import Data.Tuple (swap)
+import Data.List (sortBy)
+import Data.Ord (comparing)
+import Debug.Trace (traceShow)
 
 solution = Solution "day09" run
 
-run input = let files = parse input in (part1 files, NoSolution)
+run input = let files = parse input in (part1 files, part2 files)
 
 type Size = Int
 type Id = Int
 type FreeSpace = Int
 data Block = File Id Size | Space Int deriving Show
+
+isFile :: Block -> Bool
+isFile block = case block of
+    (File _ _) -> True
+    _ -> False
+
+isSpace :: Block -> Bool
+isSpace block = case block of
+    (Space _) -> True
+    _ -> False
 
 fileSize block = case block of
     (Space _) -> 0
@@ -48,11 +66,33 @@ checksum :: Int -> [Block] -> Int
 checksum _ [] = 0
 checksum pos (File id size : rest) = sum (take size $ zipWith (*) [pos..] [id,id..])  +  checksum (pos + size) rest
 
--- part2 idea
--- empty spaces map:
---   Map spaceSize (Set position)
--- positions map:
---   Map position Block
--- eg. 111..22...333..444
--- empty spaces: [(2, [3, 13]), (3, [7]))
--- positions: [(0, File 1 3), (3, Space 2), (5, File 2 2), ...]
+
+part2 :: [Block] -> Int
+part2 blocks = checksum2 (M.toList defragged) where
+    blocksWithIndices = scanl blockIndex 0 blocks `zip` blocks
+    spaces = S.fromList $ map (\(idx, Space size) -> (size, idx)) $ filter (isSpace . snd) blocksWithIndices  -- Set (spaceSize, idx)
+    files = M.fromList $ filter (isFile . snd) blocksWithIndices  -- Map idx File
+    defragged = defrag2 files spaces
+
+blockIndex :: Int -> Block -> Int
+blockIndex idx (File _ size) = idx + size
+blockIndex idx (Space size) = idx + size
+
+defrag2 :: M.Map Int Block -> S.Set (Int, Int) -> M.Map Int Block
+defrag2 files spaces = fst $ foldl moveFile (files, spaces) filesToMove where
+    filesToMove = reverse $ M.toList files
+
+moveFile :: (M.Map Int Block, S.Set (Int, Int)) -> (Int, Block) -> (M.Map Int Block, S.Set (Int, Int))
+moveFile (files, spaces) (fileIdx, file@(File _ fileSize)) =
+    let validSpaces = sortBy (comparing snd) $ mapMaybe ((`S.lookupGE` spaces) . (,0)) [fileSize..9] in
+    case validSpaces of
+        [] -> (files, spaces)
+        (spaceSize, spaceIdx):_ -> if spaceIdx < fileIdx then (files', spaces') else (files, spaces) where
+            files' = M.insert spaceIdx file (M.delete fileIdx files)
+            spaces' = if fileSize == spaceSize
+                    then S.delete (spaceSize, spaceIdx) spaces
+                    else S.insert (spaceSize - fileSize, spaceIdx + fileSize) (S.delete (spaceSize, spaceIdx) spaces)
+
+checksum2 :: [(Int, Block)] -> Int
+checksum2 [] = 0
+checksum2 ((idx, File id size) : rest) = sum (take size $ zipWith (*) [idx..] [id,id..])  +  checksum2 rest

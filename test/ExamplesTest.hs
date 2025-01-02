@@ -170,7 +170,7 @@ day08part1 = [(day08exampleInput, 14)]
 day08part2 = [(day08exampleInput, 34)]
 
 day09part1 = [("2333133121414131402", 1928)]
-day09part2 = []
+day09part2 = [("2333133121414131402", 2858)]
 
 day10part1 = []
 day10part2 = []
