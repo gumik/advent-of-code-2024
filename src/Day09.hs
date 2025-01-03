@@ -41,11 +41,12 @@ splitBy2 [] = []
 splitBy2 [x] = [(readNum [x], 0)]
 splitBy2 (x1:x2:xs) = (readNum [x1], readNum [x2]) : splitBy2 xs
 
+-- TODO: The solutions looks pretty ugly. They can be for sure somehow simplified.
+
 part1 :: [Block] -> Int
 part1 blocks = checksum 0 defragged where
     defragged = defragment blocks
 
---
 defragment :: [Block] -> [Block]
 defragment blocks = cutToSize totalFilesSize (defrag blocks (reverse blocks)) where
     totalFilesSize = sum $ map fileSize blocks

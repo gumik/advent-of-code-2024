@@ -172,8 +172,16 @@ day08part2 = [(day08exampleInput, 34)]
 day09part1 = [("2333133121414131402", 1928)]
 day09part2 = [("2333133121414131402", 2858)]
 
-day10part1 = []
-day10part2 = []
+day10exampleInput = "89010123\n"
+                 ++ "78121874\n"
+                 ++ "87430965\n"
+                 ++ "96549874\n"
+                 ++ "45678903\n"
+                 ++ "32019012\n"
+                 ++ "01329801\n"
+                 ++ "10456732\n"
+day10part1 = [(day10exampleInput, 36)]
+day10part2 = [(day10exampleInput, 81)]
 
 day11part1 = []
 day11part2 = []
