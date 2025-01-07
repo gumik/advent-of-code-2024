@@ -183,7 +183,7 @@ day10exampleInput = "89010123\n"
 day10part1 = [(day10exampleInput, 36)]
 day10part2 = [(day10exampleInput, 81)]
 
-day11part1 = []
+day11part1 = [("125 17", 55312)]
 day11part2 = []
 
 day12part1 = [("AAAA\n"
