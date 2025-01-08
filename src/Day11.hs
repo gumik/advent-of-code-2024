@@ -1,14 +1,16 @@
+{-# LANGUAGE TupleSections #-}
 module Day11 ( solution, blink, blinkOne ) where
 
 import Common (Solution(Solution), NoSolution(..), readNum)
 import Data.List.Split (splitOn)
-import Control.Monad.State (State(..), evalState)
+import Control.Monad.State (State(..), evalState, get, put)
 import Data.Maybe (fromMaybe)
 import Control.Monad.Extra (concatMapM)
+import qualified Data.Map.Strict as M
 
 solution = Solution "day11" run
 
-run input = let stones = parse input in (part1 stones, NoSolution)
+run input = let stones = parse input in (part1 stones, part2 stones)
 
 parse :: String -> [Int]
 parse = map readNum . splitOn " "
@@ -16,32 +18,14 @@ parse = map readNum . splitOn " "
 part1 :: [Int] -> Int
 part1 = blink 25
 
--- for part1, no-cache has ok speed
-data Cache = Cache
-
--- Give either:
---   * Right: number of stones after given number of blinks.
---   * Left: stones after less number of blinks than given and that number of blinks.
-readCache :: Int -> Int -> State Cache (Either ([Int], Int) Int)
-readCache n stone = return $ Left ([stone], 0)
-
-writeCache :: Int -> [Int] -> State Cache ()
-writeCache n stones = return ()
+part2 :: [Int] -> Int
+part2 = blink 75
 
 blink :: Int -> [Int] -> Int
-blink n stones = sum $ evalState (mapM (blinkOne n) stones) Cache
+blink n stones = sum $ map snd $ M.toList $ last $ take (n+1) $ iterate blinkOne (M.fromList (map (,1) stones))
 
-blinkOne :: Int -> Int -> State Cache Int
-blinkOne 0 _ = return 1
-blinkOne n stone = do
-    cacheItem <- readCache n stone
-    case cacheItem of
-        Right numberOfStones -> return numberOfStones
-        Left (stones, m) -> do
-            let newStones = map iterateStone stones
-            mapM_ (writeCache (m+1)) newStones
-            stones' <- mapM (blinkOne (n - m - 1)) (concat newStones)
-            return $ sum stones'
+blinkOne :: M.Map Int Int -> M.Map Int Int
+blinkOne stones =  M.fromListWith (+) $ concatMap (\(stone, count) -> map (,count) (iterateStone stone)) (M.toList stones)
 
 iterateStone :: Int -> [Int]
 iterateStone 0 = [1]
