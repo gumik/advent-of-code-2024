@@ -1,9 +1,10 @@
-module Day06 ( solution ) where
+module Day06 ( solution, genPath ) where
 
 import Common (Solution(Solution), NoSolution(..), readNum, parseArray, inArrayBounds)
-import Data.Array (Array, assocs, (!), (//))
+import Data.Array (Array, assocs, (!), (//), bounds)
 import qualified Data.Set as S
 import Debug.Trace (traceShow)
+import Data.Tuple (swap)
 
 solution = Solution "day06" run
 
@@ -26,27 +27,45 @@ toPosition x = case x of
 
 
 part1 :: [(Point, Direction)] -> Int
-part1 = S.size . S.fromList . map fst
+part1 = S.size . S.fromList . allPathPoints
 
 guardPath :: SituationMap -> [(Point, Direction)]
-guardPath situationMap = genPath situationMap' (startPoint, (-1, 0)) where
+guardPath situationMap = genPath mapBounds (guardsYX, guardsXY) (startPoint, (-1, 0)) where
     startPoint = fst $ head $ filter ((== Guard) . snd) $ assocs situationMap
-    situationMap' = fmap (\x -> if x == Guard then Empty else x) situationMap
+    -- Sets of guard positions. By (y, x) and (x, y) coordinates. To quickly find next obstacle position.
+    guardsYX = S.fromList $ map fst $ filter ((== Obstacle) . snd) $ assocs situationMap
+    guardsXY = S.map swap guardsYX
+    mapBounds = bounds situationMap
 
 type Direction = (Int, Int)
 
-genPath :: SituationMap -> (Point, Direction) -> [(Point, Direction)]
-genPath situationMap (point, direction) = let
-    nextPos = moveOne point direction
-    in if inArrayBounds situationMap nextPos then
-        case situationMap ! nextPos of
-            Empty -> (point, direction) : genPath situationMap (nextPos, direction)
-            Obstacle -> genPath situationMap (point, rotateRight direction)
-       else [(point, direction)]
+genPath :: (Point, Point) -> (S.Set Point, S.Set Point) -> (Point, Direction) -> [(Point, Direction)]
+genPath arrBounds@((y0, x0), (ym, xm)) (guardsYX, guardsXY) (point@(y, x), direction@(dy, dx)) = let
+    (nextObstacle, lineCoord) = case direction of
+        (0, 1)  -> (S.lookupGE (y+dy, x+dx) guardsYX, fst)
+        (0, -1) -> (S.lookupLE (y+dy, x+dx) guardsYX, fst)
+        (1, 0)  -> (swap <$> S.lookupGE (x+dx, y+dy) guardsXY, snd)
+        (-1, 0) -> (swap <$> S.lookupLE (x+dx, y+dy) guardsXY, snd)
+    in case nextObstacle of
+        Nothing -> [(point, direction), edgePoint arrBounds (point, direction)]
+        Just nextObstaclePos@(oy, ox) -> if lineCoord nextObstaclePos == lineCoord point
+            then (point, direction) : genPath arrBounds (guardsYX, guardsXY) ((oy-dy, ox-dx), rotateRight direction)
+            else [(point, direction), edgePoint arrBounds (point, direction)]
 
+allPathPoints :: [(Point, Direction)] -> [Point]
+allPathPoints points = concatMap extendLine (points' `zip` drop 1 points') where
+    ((y, x), (dy, dx)) = last points
+    points' = points ++ [((y+dy, x+dx), (0, 0))]
 
-moveOne :: Point -> Direction -> Point
-moveOne (x, y) (x1, y1) = (x + x1, y + y1)
+extendLine :: ((Point, Direction), (Point, Direction)) -> [Point]
+extendLine ((p1@(y1, x1), (dy, dx)), (p2, _)) = takeWhile (/= p2) $ iterate (\(y, x) -> (y+dy, x+dx)) p1
+
+edgePoint :: (Point, Point) -> (Point, Direction) -> (Point, Direction)
+edgePoint arrBounds@((y0, x0), (ym, xm)) ((y, x), direction) = case direction of
+    (1, 0) -> ((ym, x), direction)
+    (-1, 0) -> ((y0, x), direction)
+    (0, 1) -> ((y, xm), direction)
+    (0, -1) -> ((y, x0), direction)
 
 rotateRight :: Direction -> Direction
 rotateRight (y, x) = (x, -y)
@@ -54,10 +73,15 @@ rotateRight (y, x) = (x, -y)
 -- Try adding obstacle on every point of the guard path.
 -- Then check how many ends up with cycle.
 part2 :: SituationMap -> [(Point, Direction)] -> Int
-part2 situationMap path = length $ filter isCycle $ map guardPath situationMapsWithAddedObstacles where
-    pathPoints = S.toList $ S.fromList $ map fst path
+part2 situationMap path = length $ filter isCycle $ map (\guards -> genPath mapBounds guards (startPoint, (-1, 0))) guards where
+    startPoint = fst $ head $ filter ((== Guard) . snd) $ assocs situationMap
+    -- TODO: make one 'solve' function out of these 'part1' and 'part2'
+    guardsYX = S.fromList $ map fst $ filter ((== Obstacle) . snd) $ assocs situationMap
+    guardsXY = S.map swap guardsYX
+    mapBounds = bounds situationMap
+    pathPoints = S.toList $ S.fromList $ allPathPoints path
     obstaclesPoints = filter ((/= Guard) . (situationMap !)) pathPoints
-    situationMapsWithAddedObstacles = map (\p -> situationMap // [(p, Obstacle)]) obstaclesPoints
+    guards = map (\(y, x) -> (S.insert (y, x) guardsYX, S.insert (x, y) guardsXY)) obstaclesPoints
 
 isCycle :: [(Point, Direction)] -> Bool
 isCycle = isCycle' S.empty where
